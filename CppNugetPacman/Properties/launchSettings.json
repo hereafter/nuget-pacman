@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CppNugetPacman (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "CppNugetPacman (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
