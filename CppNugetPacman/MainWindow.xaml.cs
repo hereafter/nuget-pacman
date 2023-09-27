@@ -1,3 +1,4 @@
+using CppNugetPacman.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -22,6 +23,17 @@ public sealed partial class MainWindow : Window
     {
         this.InitializeComponent();
         this.AppWindow.Title = "Nuget Pacman";
+
+
+        _=this.TestAsync();
+    }
+
+
+
+    async Task TestAsync()
+    {
+        MSolution solution = new();
+        await solution.LoadAsync(@"P:\Projects\apps\taskbar-calendar\src\taskbar-calendar.sln");
     }
 
     
