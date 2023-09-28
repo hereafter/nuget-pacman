@@ -8,20 +8,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ctk="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
-            <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left">
-                <AppBarButton Icon="OpenLocal" Label="Open"></AppBarButton>
-            </CommandBar>
-        </Grid>
-        <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}">
-            
-        </Grid>
-    </Grid>
-    
-    
+    <Frame x:Name="Frame"></Frame>
 </Window>

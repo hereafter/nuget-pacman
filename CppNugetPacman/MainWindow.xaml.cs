@@ -1,20 +1,5 @@
 using CppNugetPacman.Models.Data;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-namespace CppNugetPacman;
+using Microsoft.UI.Xaml;namespace CppNugetPacman;
 
 
 public sealed partial class MainWindow : Window
@@ -24,17 +9,13 @@ public sealed partial class MainWindow : Window
         this.InitializeComponent();
         this.AppWindow.Title = "Nuget Pacman";
 
-
-        _=this.TestAsync();
+        this.Frame.Navigate(typeof(MainPage));
+        
     }
 
 
 
-    async Task TestAsync()
-    {
-        MSolution solution = new();
-        await solution.LoadAsync(@"P:\Projects\apps\taskbar-calendar\src\taskbar-calendar.sln");
-    }
+    
 
     
 }

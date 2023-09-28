@@ -5,9 +5,7 @@ namespace CppNugetPacman.Models.Data;
 
 public class MProject : MItem
 {
-
     public IEnumerable<MNugetPackage> Packages { get; set; } = Array.Empty<MNugetPackage>();
-
 
     public async Task<bool> LoadAsync(string filePath)
     {
@@ -94,5 +92,15 @@ public class MProject : MItem
         }
 
         return true;
+    }
+
+    public async Task<bool> UpdateLocalFolderPathAsync(string folderPath = "$(SolutionDir)packages\\")
+    {
+        return true;
+    }
+
+    public async Task<bool> UpdatePackageVersionAsync(string pid, string newVersion)
+    {
+        return false;
     }
 }
