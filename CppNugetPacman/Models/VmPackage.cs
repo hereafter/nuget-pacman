@@ -2,14 +2,8 @@
 
 namespace CppNugetPacman.Models;
 
-public partial class VmPackage: ObservableObject
-{
-    [ObservableProperty]
-    private string _name = string.Empty;
-
-    [ObservableProperty]
-    private string _version = string.Empty;
-
+public partial class VmPackage: VmNode
+{    
     [ObservableProperty]
     private bool _isUnique = false;
 
@@ -17,21 +11,28 @@ public partial class VmPackage: ObservableObject
     private string _folderPath = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<VmProject> _projects = new();
+    private string _version = string.Empty;
 
     [ObservableProperty]
     private string _details = string.Empty;
 
+    [ObservableProperty]
+    private ObservableCollection<VmProject> _projects = new();
+
     public MNugetPackage Data { get; set; }
+
 
     public VmPackage(MNugetPackage data)
     {
         this.Data = data;
 
-        this.Name = data.Id;
+        this.Title = data.Id;
         this.IsUnique= data.IsUnique;
         this.FolderPath = data.Path;
         this.Version = data.Version;
+
+        this.IsUnique = data.IsUnique;
+        this.FolderPath = data.Path;
 
         var sb = new StringBuilder();
 
@@ -52,6 +53,8 @@ public partial class VmPackage: ObservableObject
 
         this.Details = sb.ToString();
     }
+
+    
 
 }
 

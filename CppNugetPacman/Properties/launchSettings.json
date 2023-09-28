@@ -1,7 +1,8 @@
 {
   "profiles": {
     "CppNugetPacman (Package)": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
     },
     "CppNugetPacman (Unpackaged)": {
       "commandName": "Project"
