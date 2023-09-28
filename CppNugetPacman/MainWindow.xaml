@@ -19,18 +19,7 @@
             </CommandBar>
         </Grid>
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <TreeViewList x:Name="SolutionsView" MinWidth="320" MaxWidth="640">
-            </TreeViewList>
-            <ctk:ContentSizer Background="{ThemeResource AppBarBackgroundThemeBrush}"
-                Grid.Column="1" TargetControl="{x:Bind SolutionsView}"></ctk:ContentSizer>
-            <ItemsView Grid.Column="2">
-            </ItemsView>
+            
         </Grid>
     </Grid>
     

@@ -1,4 +1,4 @@
-﻿namespace CppNugetPacman.Models;
+﻿namespace CppNugetPacman.Models.Data;
 
 public class MItem
 {

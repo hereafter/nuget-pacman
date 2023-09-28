@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace CppNugetPacman.Models;
+namespace CppNugetPacman.Models.Data;
 
-public class MSolution: MItem
+public class MSolution : MItem
 {
     private const string VisualStudioFileFormatHeader = "Microsoft Visual Studio Solution File, Format Version";
     private const string VisualStudioProjectLead = "Project(";
@@ -13,23 +13,23 @@ public class MSolution: MItem
 
     public async Task<bool> LoadAsync(string filePath)
     {
-        if (!filePath.EndsWith(".sln", System.StringComparison.OrdinalIgnoreCase))
+        if (!filePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
             return false;
 
-        var lines= await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
+        var lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
 
         var signature = lines.FirstOrDefault(l => l.StartsWith(VisualStudioFileFormatHeader));
         if (signature == null) return false;
 
-        this.FormatVersion = signature.Replace(VisualStudioFileFormatHeader, string.Empty).Trim();
+        FormatVersion = signature.Replace(VisualStudioFileFormatHeader, string.Empty).Trim();
 
-        this.FilePath = filePath;
-        this.FolderPath= Path.GetDirectoryName(filePath);
+        FilePath = filePath;
+        FolderPath = Path.GetDirectoryName(filePath);
 
-        if (this.FolderPath == null) return false;
+        if (FolderPath == null) return false;
 
         var projects = new List<MProject>();
-        foreach(var line in lines)
+        foreach (var line in lines)
         {
             if (!line.StartsWith(VisualStudioProjectLead, StringComparison.OrdinalIgnoreCase))
                 continue;
@@ -46,11 +46,11 @@ public class MSolution: MItem
             if (!path.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase)) continue;
 
 
-            
+
             var proj = new MProject();
-            if(!Path.IsPathRooted(path))
+            if (!Path.IsPathRooted(path))
             {
-                path = Path.GetFullPath(Path.Combine(this.FolderPath, path));
+                path = Path.GetFullPath(Path.Combine(FolderPath, path));
             }
 
             Debug.WriteLine($"<!> {name}: {path}");
@@ -59,11 +59,11 @@ public class MSolution: MItem
             {
                 projects.Add(proj);
             }
-            
+
 
         }
 
-        this.Projects = projects;
+        Projects = projects;
         return true;
     }
 
