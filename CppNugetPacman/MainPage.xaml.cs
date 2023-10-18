@@ -1,7 +1,7 @@
 using CommunityToolkit.WinUI;
 using CppNugetPacman.Models;
 using CppNugetPacman.Models.Data;
-
+using Microsoft.UI.Xaml.Input;
 
 namespace CppNugetPacman;
 
@@ -34,5 +34,13 @@ public sealed partial class MainPage : Page
         {
             this.Solution = new VmSolution(solution);
         });
+    }
+
+    private void OnCommandFixPackageLocationExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+    }
+
+    private void OnCommandFixPackageVersionExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
     }
 }

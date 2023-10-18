@@ -8,6 +8,19 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+        <XamlUICommand x:Key="FixPackagePath" Label="Fix Cache Location"
+                       ExecuteRequested="OnCommandFixPackageLocationExecuteRequested">
+            <XamlUICommand.IconSource>
+                <FontIconSource Glyph="&#xE90F;" />
+            </XamlUICommand.IconSource>
+        </XamlUICommand>
+        <XamlUICommand x:Key="FixPackageVersion" Label="Fix Version"
+                       ExecuteRequested="OnCommandFixPackageVersionExecuteRequested">
+            <XamlUICommand.IconSource>
+                <FontIconSource Glyph="&#xE946;" />
+            </XamlUICommand.IconSource>
+        </XamlUICommand>
+
         <DataTemplate x:Key="PackageTemplate" x:DataType="models:VmPackage">
             <TreeViewItem ItemsSource="{x:Bind Projects}">
                 <StackPanel>
@@ -24,6 +37,12 @@
                         <TextBlock Margin="32, 0" Text="{x:Bind FolderPath}"></TextBlock>
                     </StackPanel>
                 </StackPanel>
+                <TreeViewItem.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Command="{StaticResource FixPackagePath}" />
+                        <MenuFlyoutItem Command="{StaticResource FixPackageVersion}" />
+                    </MenuFlyout>
+                </TreeViewItem.ContextFlyout>
             </TreeViewItem>
         </DataTemplate>
 
