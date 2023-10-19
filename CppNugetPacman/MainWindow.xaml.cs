@@ -18,7 +18,7 @@ public sealed partial class MainWindow : Window
         var dpi = PInvoke.GetDpiForWindow(new Windows.Win32.Foundation.HWND(hWnd))/96;
 
         this.AppWindow.Resize(new Windows.Graphics.SizeInt32((int)(800*dpi), (int)(600*dpi)));
-
+        
 
         this.Frame.Navigate(typeof(MainPage));
         

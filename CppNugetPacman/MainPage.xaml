@@ -63,6 +63,19 @@
         <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
             <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left">
                 <AppBarButton Icon="OpenLocal" Label="Open" Click="OnButtonOpenClick"></AppBarButton>
+                
+            </CommandBar>
+
+            <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Right">
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Help" Label="Help" Click="OnButtonHelpClick"/>
+                    <AppBarButton Label="Feedback" Click="OnButtonFeedbackClick">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xED15;" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+
             </CommandBar>
         </Grid>
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}"

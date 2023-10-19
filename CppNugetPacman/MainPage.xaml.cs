@@ -4,6 +4,7 @@ using CppNugetPacman.Models.Data;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Pickers;
+using Windows.System;
 using WinRT.Interop;
 
 namespace CppNugetPacman;
@@ -178,5 +179,15 @@ public sealed partial class MainPage : Page
         {
             deferral.Complete();
         }
+    }
+
+    private async void OnButtonHelpClick(object sender, RoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(new Uri("https://github.com/hereafter/nuget-pacman/wiki"));
+    }
+
+    private async void OnButtonFeedbackClick(object sender, RoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(new Uri("https://github.com/hereafter/nuget-pacman/issues"));
     }
 }
