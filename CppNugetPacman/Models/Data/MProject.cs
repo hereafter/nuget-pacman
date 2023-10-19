@@ -100,39 +100,31 @@ public class MProject : MItem
         FolderPath = Path.GetDirectoryName(filePath);
         if (FolderPath == null) return false;
 
-        //package.config
-        var options = new EnumerationOptions { RecurseSubdirectories = true };
-        var configFilePath = Directory.EnumerateFiles(FolderPath, "packages.config", options).FirstOrDefault();
-        if (configFilePath == null) return false;
+        var paths = this.Packages.FirstOrDefault(x => x.Id == pid)?.Paths;
+        if (paths == null) return false;
 
-        var packages = new List<MNugetPackage>();
-        var lines = await File.ReadAllLinesAsync(configFilePath);
-
-
-        var rx = new Regex("(\\S*?)=\"(.*?)\"");
-
-        foreach (var line in lines)
+        var rx1 = new Regex($"'([^'\\\"]*?{pid}[^'\\\"]*?)'");
+        var rx2 = new Regex($"\"([^'\\\"]*?{pid}[^'\\\"]*?)\"");
+        await this.TransformLinesAsync(filePath, (line) =>
         {
-            var content = line.Trim();
-            if (!content.StartsWith("<package id")) continue;
-
-            var matches = rx.Matches(content);
-            if (matches.Count < 3) continue;
-
-            var id = matches[0].Groups[2].Value.ToString();
-            var version = matches[1].Groups[2].Value.ToString();
-
-            var package = new MNugetPackage
+            var matches = rx1.Matches(line);
+            if (matches.Count == 0)
             {
-                Id = id
-            };
-            package.Version = version;
-            packages.Add(package);
-            Debug.WriteLine($"-> {id}: {version}");
-        }
-        Packages = packages;
+                matches = rx2.Matches(line);
+            }
 
-        lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
+            if (matches.Count == 0) return line;
+
+            var content = line;
+
+            foreach(var v in paths)
+            {
+                content = content.Replace(v, folderPath);
+            }
+           
+            return content;
+        });
+
 
 
         return true;
