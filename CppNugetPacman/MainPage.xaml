@@ -4,7 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CppNugetPacman"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:CppNugetPacman.Models" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:models="using:CppNugetPacman.Models" 
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    AllowDrop="True" DropCompleted="OnPageDropCompleted"
+    DragOver="OnPageDragOver" DragEnter="OnPageDragEnter"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
@@ -46,18 +51,24 @@
         <local:TreeViewItemTemplateSelector x:Key="TreeViewItemTemplateSelector"
                                             PackageTemplate="{StaticResource PackageTemplate}"
                                             ProjectTemplate="{StaticResource ProjectTemplate}"/>
+        <converters:EmptyObjectToObjectConverter x:Key="NotNullToVisiblityConverter" EmptyValue="Collapsed" NotEmptyValue="Visible">
+        </converters:EmptyObjectToObjectConverter>
+        <converters:EmptyObjectToObjectConverter x:Key="NullToVisiblityConverter" EmptyValue="Visible" NotEmptyValue="Collapsed">
+        </converters:EmptyObjectToObjectConverter>
+
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
             <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left">
-                <AppBarButton Icon="OpenLocal" Label="Open"></AppBarButton>
+                <AppBarButton Icon="OpenLocal" Label="Open" Click="OnButtonOpenClick"></AppBarButton>
             </CommandBar>
         </Grid>
-        <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}">
+        <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}"
+              Visibility="{x:Bind Solution, Converter={StaticResource NotNullToVisiblityConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto"/>
@@ -68,7 +79,7 @@
                       CanDrag="False" CanDragItems="False">
             </TreeView>
 
-            <controls:GridSplitter Grid.Row="1">
+            <controls:GridSplitter Grid.Row="1" >
                 
             </controls:GridSplitter>
 
@@ -90,6 +101,14 @@
                     <Button Padding="16, 4" Click="OnButtonUpdateClick">UPDATE</Button>
                 </StackPanel>
             </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Visibility="{x:Bind Solution, Converter={StaticResource NullToVisiblityConverter},
+            Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="0, -16, 0, 0">
+                <TextBlock Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}">DROP A SOLUTION FILE HERE</TextBlock>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

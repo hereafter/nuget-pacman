@@ -1,7 +1,10 @@
 using CommunityToolkit.WinUI;
 using CppNugetPacman.Models;
 using CppNugetPacman.Models.Data;
-using Microsoft.UI.Xaml.Input;
+using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace CppNugetPacman;
 
@@ -21,13 +24,35 @@ public sealed partial class MainPage : Page
     {
         this.InitializeComponent();
 
-        _ = this.TestAsync();
+        //_ = this.TestAsync();
     }
 
     async Task TestAsync()
     {
         MSolution solution = new();
         await solution.LoadAsync(@"P:\Projects\apps\taskbar-calendar\src\taskbar-calendar.sln");
+
+        await this.DispatcherQueue.EnqueueAsync(() =>
+        {
+            this.Solution = new VmSolution(solution);
+        });
+    }
+
+    private async void OnButtonOpenClick(object sender, RoutedEventArgs e)
+    {
+        var picker = new FileOpenPicker();
+        picker.SuggestedStartLocation = PickerLocationId.Desktop;
+
+        picker.FileTypeFilter.Add(".sln");
+
+        InitializeWithWindow.Initialize(picker, Process.GetCurrentProcess().MainWindowHandle);
+
+        var file=await picker.PickSingleFileAsync();
+        if (file == null) return;
+
+        var solution = new MSolution();
+        var success=await solution.LoadAsync(file.Path);
+        if (!success) return;
 
         await this.DispatcherQueue.EnqueueAsync(() =>
         {
@@ -81,4 +106,48 @@ public sealed partial class MainPage : Page
 
 
     }
+
+
+    private void OnPageDropCompleted(UIElement sender, DropCompletedEventArgs args)
+    {
+
+    }
+
+    private void OnPageDragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private async void OnPageDragOver(object sender, DragEventArgs e)
+    {
+        var deferral = e.GetDeferral(); try
+        {
+            if (!e.DataView.AvailableFormats.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.None;
+                return;
+            }
+
+            var items = await e.DataView.GetStorageItemsAsync();
+
+            var item = items.FirstOrDefault(x => Path.GetExtension(x.Path).Equals(".sln", StringComparison.OrdinalIgnoreCase));
+            if (item == null)
+            {
+                e.AcceptedOperation = DataPackageOperation.None;
+                return;
+            }
+
+            e.AcceptedOperation = DataPackageOperation.Link;
+            return;
+        }
+        finally
+        {
+            deferral.Complete();
+        }
+        
+    }
+
+
+
+    
 }
