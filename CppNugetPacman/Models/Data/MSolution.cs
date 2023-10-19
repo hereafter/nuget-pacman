@@ -67,5 +67,10 @@ public class MSolution : MItem
         return true;
     }
 
+    public async Task<bool> ReloadAsync()
+    {
+        return await this.LoadAsync(this.FilePath??string.Empty);
+    }
+
 
 }

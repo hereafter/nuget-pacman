@@ -50,12 +50,35 @@ public sealed partial class MainPage : Page
         if(item is VmPackage package)
         {
             await package.ApplyAsync(location, version);
+            await this.Solution.ReloadAsync();
+
+
+            var p = this.Solution.Packages.FirstOrDefault(x => x.Data.Id == package.Data.Id);
+            _treeView.SelectedItem = p;
+
         }
 
         if (item is VmProject project)
         {
             var p=this.Solution.Packages.First(p => p.Projects.Contains(project));
             await project.ApplyAsync(p, location, version);
+            await this.Solution.ReloadAsync();
+
+            await Task.Delay(100);
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                p = this.Solution.Packages.FirstOrDefault(x => x.Projects.FirstOrDefault(p => p.Data.Name == project.Data.Name) != null);
+                var container = _treeView.ContainerFromItem(p);
+                var node = _treeView.NodeFromContainer(container);
+                _treeView.Expand(node);
+                var proj = p.Projects.FirstOrDefault(x => x.Title == project.Title);
+                _treeView.SelectedItem = proj;
+            });
+            
         }
+
+
+
+
     }
 }
