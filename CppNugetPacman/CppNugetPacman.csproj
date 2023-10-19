@@ -13,6 +13,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+    <AppxPackageDir>T:\Projects\work\CppNugetPacman\AppPackages</AppxPackageDir>
+    <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\LargeTile.scale-100.png" />
