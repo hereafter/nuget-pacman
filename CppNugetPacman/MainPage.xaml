@@ -4,29 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CppNugetPacman"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:CppNugetPacman.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:CppNugetPacman.Models" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <XamlUICommand x:Key="FixPackagePath" Label="Fix Cache Location"
-                       ExecuteRequested="OnCommandFixPackageLocationExecuteRequested">
-            <XamlUICommand.IconSource>
-                <FontIconSource Glyph="&#xE90F;" />
-            </XamlUICommand.IconSource>
-        </XamlUICommand>
-        <XamlUICommand x:Key="FixPackageVersion" Label="Fix Version"
-                       ExecuteRequested="OnCommandFixPackageVersionExecuteRequested">
-            <XamlUICommand.IconSource>
-                <FontIconSource Glyph="&#xE946;" />
-            </XamlUICommand.IconSource>
-        </XamlUICommand>
-
         <DataTemplate x:Key="PackageTemplate" x:DataType="models:VmPackage">
             <TreeViewItem ItemsSource="{x:Bind Projects}">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Content="{x:Bind Title}"
-                                  Width="Auto" VerticalAlignment="Center" FontWeight="Bold"></CheckBox>
+                        <TextBlock Text="{x:Bind Title}" FontWeight="Bold" Width="Auto" VerticalAlignment="Center" />
                         <TextBlock VerticalAlignment="Center" Margin="16, 0">                            
                             <Run>[</Run>
                             <Run Text="{x:Bind Version}"/>
@@ -34,15 +20,9 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Margin="32, 0" Text="{x:Bind FolderPath}"></TextBlock>
+                        <TextBlock Margin="8, 0" Text="{x:Bind FolderPath}"></TextBlock>
                     </StackPanel>
                 </StackPanel>
-                <TreeViewItem.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Command="{StaticResource FixPackagePath}" />
-                        <MenuFlyoutItem Command="{StaticResource FixPackageVersion}" />
-                    </MenuFlyout>
-                </TreeViewItem.ContextFlyout>
             </TreeViewItem>
         </DataTemplate>
 
@@ -50,8 +30,7 @@
             <TreeViewItem>
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Content="{x:Bind Title}"
-                  Width="Auto" VerticalAlignment="Center"></CheckBox>
+                        <TextBlock Text="{x:Bind Title}" Width="Auto" VerticalAlignment="Center" />
                         <TextBlock VerticalAlignment="Center" Margin="16, 0">                            
                                     <Run>[</Run>
                                     <Run Text="{x:Bind Version}"/>
@@ -59,13 +38,11 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Margin="32, 0" Text="{x:Bind FolderPath}"></TextBlock>
+                        <TextBlock Margin="8, 0" Text="{x:Bind FolderPath}"></TextBlock>
                     </StackPanel>
                 </StackPanel>
             </TreeViewItem>
         </DataTemplate>
-
-
         <local:TreeViewItemTemplateSelector x:Key="TreeViewItemTemplateSelector"
                                             PackageTemplate="{StaticResource PackageTemplate}"
                                             ProjectTemplate="{StaticResource ProjectTemplate}"/>
@@ -81,10 +58,38 @@
             </CommandBar>
         </Grid>
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefault}">
-            <TreeView ItemsSource="{x:Bind Solution.Packages, Mode=OneWay}" SelectionMode="None"
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="240"/>
+            </Grid.RowDefinitions>
+            <TreeView x:Name="_treeView" ItemsSource="{x:Bind Solution.Packages, Mode=OneWay}" SelectionMode="Single"
                       ItemTemplateSelector="{StaticResource TreeViewItemTemplateSelector}"
                       CanDrag="False" CanDragItems="False">
             </TreeView>
+
+            <controls:GridSplitter Grid.Row="1">
+                
+            </controls:GridSplitter>
+
+            <Grid Grid.Row="2" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                <StackPanel Spacing="16" MinWidth="240" Margin="16, 8"
+                            DataContext="{Binding SelectedItem,ElementName=_treeView, Mode=OneWay}">
+
+                    <TextBlock Text="Properties" FontWeight="Bold"/>
+
+                    <controls:HeaderedContentControl Header="Location:"
+                                                     HorizontalContentAlignment="Stretch">
+                        <TextBox x:Name="TextBoxFolderPath" Text="{Binding FolderPath, Mode=OneWay}" />
+                    </controls:HeaderedContentControl>
+
+                    <controls:HeaderedContentControl Header="Version:"
+                                                     HorizontalContentAlignment="Stretch">
+                        <TextBox x:Name="TextBoxVersion" Text="{Binding Version, Mode=OneWay}"/>
+                    </controls:HeaderedContentControl>
+                    <Button Padding="16, 4" Click="OnButtonUpdateClick">UPDATE</Button>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

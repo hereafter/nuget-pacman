@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Input;
 
 namespace CppNugetPacman;
 
-
 public sealed partial class MainPage : Page
 {
     public VmSolution? Solution
@@ -36,11 +35,9 @@ public sealed partial class MainPage : Page
         });
     }
 
-    private void OnCommandFixPackageLocationExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-    }
 
-    private void OnCommandFixPackageVersionExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void OnButtonUpdateClick(object sender, RoutedEventArgs e)
     {
+
     }
 }
