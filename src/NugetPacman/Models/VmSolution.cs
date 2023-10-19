@@ -1,9 +1,8 @@
-﻿using CppNugetPacman.Models.Data;
-using NuGet.Common;
+﻿using NugetPacman.Models.Data;
 
-namespace CppNugetPacman.Models;
+namespace NugetPacman.Models;
 
-public partial class VmSolution: ObservableObject
+public partial class VmSolution : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<VmProject> _projects = new();

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace CppNugetPacman.Models.Data;
+namespace NugetPacman.Models.Data;
 
 public class MProject : MItem
 {
@@ -21,7 +20,7 @@ public class MProject : MItem
         if (configFilePath == null) return false;
 
         var packages = new List<MNugetPackage>();
-        
+
         var rx = new Regex("(\\S*?)=\"(.*?)\"");
 
         await this.ParseLinesAsync(configFilePath, (line) =>
@@ -94,7 +93,7 @@ public class MProject : MItem
     public async Task<bool> UpdateLocalFolderPathAsync(string pid, string folderPath = "$(SolutionDir)packages\\")
     {
         var filePath = this.FilePath;
-        if (filePath==null || !filePath.EndsWith(".vcxproj")) return false;
+        if (filePath == null || !filePath.EndsWith(".vcxproj")) return false;
 
         FilePath = filePath;
         FolderPath = Path.GetDirectoryName(filePath);
@@ -117,11 +116,11 @@ public class MProject : MItem
 
             var content = line;
 
-            foreach(var v in paths)
+            foreach (var v in paths)
             {
                 content = content.Replace(v, folderPath);
             }
-           
+
             return content;
         });
 
@@ -146,7 +145,7 @@ public class MProject : MItem
         var options = new EnumerationOptions { RecurseSubdirectories = true };
         var configFilePath = Directory.EnumerateFiles(FolderPath, "packages.config", options).FirstOrDefault();
         if (configFilePath == null) return false;
-       
+
         var rx = new Regex("(\\S*?)=\"(.*?)\"");
         await this.TransformLinesAsync(configFilePath, (line) =>
         {
@@ -187,7 +186,7 @@ public class MProject : MItem
             if (matches.Count == 0) return line;
 
             var content = line;
-            foreach(var v in versions)
+            foreach (var v in versions)
             {
                 content = line.Replace(v, newVersion);
             }

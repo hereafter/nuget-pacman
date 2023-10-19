@@ -1,6 +1,6 @@
-﻿using CppNugetPacman.Models.Data;
+﻿using NugetPacman.Models.Data;
 
-namespace CppNugetPacman.Models;
+namespace NugetPacman.Models;
 
 public partial class VmProject : VmNode
 {
@@ -26,9 +26,9 @@ public partial class VmProject : VmNode
     {
         this.Data = data;
 
-        this.Title = data.Name;        
+        this.Title = data.Name;
 
-        foreach(var p in data.Packages)
+        foreach (var p in data.Packages)
         {
             this.Packages.Add(new VmPackage(p));
         }
@@ -47,9 +47,9 @@ public partial class VmProject : VmNode
     }
 
     public async Task ApplyAsync(VmPackage package, string location, string version)
-    {  
+    {
         var packageData = this.Data.Packages.FirstOrDefault(x => x.Id == package.Title);
-        if(packageData == null) return;
+        if (packageData == null) return;
 
 
         //apply path
@@ -59,10 +59,10 @@ public partial class VmProject : VmNode
             await this.Data.UpdateLocalFolderPathAsync(package.Data.Id, location);
         }
 
-        if (version !=packageData.Version)
+        if (version != packageData.Version)
         {
             await this.Data.UpdatePackageVersionAsync(package.Data.Id, version);
         }
-       
+
     }
 }

@@ -12,12 +12,12 @@
     Publisher="CN=61AA0D33-CF4F-46A5-93A4-EE3200B3B4BD"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="f563b7a7-c0a2-48bb-bb11-b1fd6b06c0fd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="c16abc04-9165-4d1d-9c42-1fe0dcca0481" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>CppNugetPacman</DisplayName>
+    <DisplayName>Nuget Pacman</DisplayName>
     <PublisherDisplayName>Hereafter2</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -35,12 +35,12 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="Nuget Pacman"
-        Description="NuGet Package Management for VC Projects"
+        Description="NuGet Package management for VS Projects"
         BackgroundColor="transparent"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
+        <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>

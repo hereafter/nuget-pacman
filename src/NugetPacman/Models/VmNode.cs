@@ -1,6 +1,6 @@
-﻿namespace CppNugetPacman.Models;
+﻿namespace NugetPacman.Models;
 
-public partial class VmNode: ObservableObject
+public partial class VmNode : ObservableObject
 {
     [ObservableProperty]
     private string _title = string.Empty;

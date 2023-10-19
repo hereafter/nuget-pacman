@@ -1,9 +1,9 @@
-﻿using CppNugetPacman.Models.Data;
+﻿using NugetPacman.Models.Data;
 
-namespace CppNugetPacman.Models;
+namespace NugetPacman.Models;
 
-public partial class VmPackage: VmNode
-{    
+public partial class VmPackage : VmNode
+{
     [ObservableProperty]
     private bool _isUnique = false;
 
@@ -27,7 +27,7 @@ public partial class VmPackage: VmNode
         this.Data = data;
 
         this.Title = data.Id;
-        this.IsUnique= data.IsUnique;
+        this.IsUnique = data.IsUnique;
         this.FolderPath = data.Path;
         this.Version = data.Version;
 
@@ -46,7 +46,7 @@ public partial class VmPackage: VmNode
 
         sb.AppendLine("Versions: ");
 
-        foreach(var v in data.Versions)
+        foreach (var v in data.Versions)
         {
             sb.AppendLine($"  {v}");
         }
@@ -54,10 +54,10 @@ public partial class VmPackage: VmNode
         this.Details = sb.ToString();
     }
 
-    
+
     public async Task ApplyAsync(string location, string version)
     {
-        foreach(var project in this.Projects)
+        foreach (var project in this.Projects)
         {
             await project.ApplyAsync(this, location, version);
         }

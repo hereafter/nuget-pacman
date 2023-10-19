@@ -1,8 +1,8 @@
-﻿using CppNugetPacman.Models;
+﻿using NugetPacman.Models;
 
-namespace CppNugetPacman;
+namespace NugetPacman;
 
-public class TreeViewItemTemplateSelector: DataTemplateSelector
+public class TreeViewItemTemplateSelector : DataTemplateSelector
 {
 
     public DataTemplate? PackageTemplate { get; set; } = null;
@@ -12,7 +12,7 @@ public class TreeViewItemTemplateSelector: DataTemplateSelector
     protected override DataTemplate SelectTemplateCore(object item)
     {
         DataTemplate? template = null;
-        if(item is VmPackage) template = PackageTemplate;
+        if (item is VmPackage) template = PackageTemplate;
         if (item is VmProject) template = ProjectTemplate;
         if (template != null) return template;
 

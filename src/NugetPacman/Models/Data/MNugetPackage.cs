@@ -1,4 +1,4 @@
-﻿namespace CppNugetPacman.Models.Data;
+﻿namespace NugetPacman.Models.Data;
 
 public class MNugetPackage
 {

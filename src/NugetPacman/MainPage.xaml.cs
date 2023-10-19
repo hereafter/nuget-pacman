@@ -1,13 +1,13 @@
-using CommunityToolkit.WinUI;
-using CppNugetPacman.Models;
-using CppNugetPacman.Models.Data;
 using System.Diagnostics;
+using CommunityToolkit.WinUI;
+using NugetPacman.Models;
+using NugetPacman.Models.Data;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Pickers;
 using Windows.System;
 using WinRT.Interop;
 
-namespace CppNugetPacman;
+namespace NugetPacman;
 
 public sealed partial class MainPage : Page
 {
@@ -48,7 +48,7 @@ public sealed partial class MainPage : Page
 
         InitializeWithWindow.Initialize(picker, Process.GetCurrentProcess().MainWindowHandle);
 
-        var file=await picker.PickSingleFileAsync();
+        var file = await picker.PickSingleFileAsync();
         if (file == null) return;
 
         await this.OpenAsync(file.Path);
@@ -69,7 +69,7 @@ public sealed partial class MainPage : Page
 
     private async void OnButtonUpdateClick(object sender, RoutedEventArgs e)
     {
-        var item=_treeView.SelectedItem;
+        var item = _treeView.SelectedItem;
         if (item == null) return;
 
         if (this.Solution == null) return;
@@ -78,7 +78,7 @@ public sealed partial class MainPage : Page
         var location = TextBoxFolderPath.Text.Trim();
         var version = TextBoxVersion.Text.Trim();
 
-        if(item is VmPackage package)
+        if (item is VmPackage package)
         {
             await package.ApplyAsync(location, version);
             await this.Solution.ReloadAsync();
@@ -91,7 +91,7 @@ public sealed partial class MainPage : Page
 
         if (item is VmProject project)
         {
-            var p=this.Solution.Packages.First(p => p.Projects.Contains(project));
+            var p = this.Solution.Packages.First(p => p.Projects.Contains(project));
             await project.ApplyAsync(p, location, version);
             await this.Solution.ReloadAsync();
 
@@ -99,13 +99,14 @@ public sealed partial class MainPage : Page
             this.DispatcherQueue.TryEnqueue(() =>
             {
                 p = this.Solution.Packages.FirstOrDefault(x => x.Projects.FirstOrDefault(p => p.Data.Name == project.Data.Name) != null);
+                if (p == null) return;
                 var container = _treeView.ContainerFromItem(p);
                 var node = _treeView.NodeFromContainer(container);
                 _treeView.Expand(node);
                 var proj = p.Projects.FirstOrDefault(x => x.Title == project.Title);
                 _treeView.SelectedItem = proj;
             });
-            
+
         }
 
     }
@@ -138,7 +139,7 @@ public sealed partial class MainPage : Page
         {
             deferral.Complete();
         }
-        
+
     }
 
 

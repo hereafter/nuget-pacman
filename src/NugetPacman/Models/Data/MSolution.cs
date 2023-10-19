@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace CppNugetPacman.Models.Data;
+namespace NugetPacman.Models.Data;
 
 public class MSolution : MItem
 {
@@ -69,7 +69,7 @@ public class MSolution : MItem
 
     public async Task<bool> ReloadAsync()
     {
-        return await this.LoadAsync(this.FilePath??string.Empty);
+        return await this.LoadAsync(this.FilePath ?? string.Empty);
     }
 
 
