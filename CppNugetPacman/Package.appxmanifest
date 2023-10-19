@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="8cd56505-c99b-4718-8c0c-e2ade5ee39f9"
-    Publisher="CN=hereafter"
+    Name="25510Hereafter2.NugetPacman"
+    Publisher="CN=61AA0D33-CF4F-46A5-93A4-EE3200B3B4BD"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="8cd56505-c99b-4718-8c0c-e2ade5ee39f9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="f563b7a7-c0a2-48bb-bb11-b1fd6b06c0fd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>CppNugetPacman</DisplayName>
-    <PublisherDisplayName>hereafter</PublisherDisplayName>
+    <PublisherDisplayName>Hereafter2</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
