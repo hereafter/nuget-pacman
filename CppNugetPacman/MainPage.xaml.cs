@@ -50,8 +50,13 @@ public sealed partial class MainPage : Page
         var file=await picker.PickSingleFileAsync();
         if (file == null) return;
 
+        await this.OpenAsync(file.Path);
+    }
+
+    private async Task OpenAsync(string filePath)
+    {
         var solution = new MSolution();
-        var success=await solution.LoadAsync(file.Path);
+        var success = await solution.LoadAsync(filePath);
         if (!success) return;
 
         await this.DispatcherQueue.EnqueueAsync(() =>
@@ -102,43 +107,31 @@ public sealed partial class MainPage : Page
             
         }
 
-
-
-
     }
 
 
-    private void OnPageDropCompleted(UIElement sender, DropCompletedEventArgs args)
+
+
+    private async void OnPageDragEnter(object sender, DragEventArgs e)
     {
+        var deferral = e.GetDeferral();
 
-    }
 
-    private void OnPageDragEnter(object sender, DragEventArgs e)
-    {
-
+        try
+        {
+            await this.HandleDragEventAsync(e);
+        }
+        finally
+        {
+            deferral.Complete();
+        }
     }
 
     private async void OnPageDragOver(object sender, DragEventArgs e)
     {
         var deferral = e.GetDeferral(); try
         {
-            if (!e.DataView.AvailableFormats.Contains(StandardDataFormats.StorageItems))
-            {
-                e.AcceptedOperation = DataPackageOperation.None;
-                return;
-            }
-
-            var items = await e.DataView.GetStorageItemsAsync();
-
-            var item = items.FirstOrDefault(x => Path.GetExtension(x.Path).Equals(".sln", StringComparison.OrdinalIgnoreCase));
-            if (item == null)
-            {
-                e.AcceptedOperation = DataPackageOperation.None;
-                return;
-            }
-
-            e.AcceptedOperation = DataPackageOperation.Link;
-            return;
+            await this.HandleDragEventAsync(e);
         }
         finally
         {
@@ -148,6 +141,42 @@ public sealed partial class MainPage : Page
     }
 
 
+    private async Task HandleDragEventAsync(DragEventArgs e)
+    {
+        if (!e.DataView.AvailableFormats.Contains(StandardDataFormats.StorageItems))
+        {
+            e.AcceptedOperation = DataPackageOperation.None;
+            return;
+        }
 
-    
+        var items = await e.DataView.GetStorageItemsAsync();
+
+        var item = items.FirstOrDefault(x => Path.GetExtension(x.Path).Equals(".sln", StringComparison.OrdinalIgnoreCase));
+        if (item == null)
+        {
+            e.AcceptedOperation = DataPackageOperation.None;
+            return;
+        }
+
+        e.AcceptedOperation = DataPackageOperation.Link;
+        return;
+    }
+
+    private async void OnPageDrop(object sender, DragEventArgs e)
+    {
+        var deferral = e.GetDeferral();
+
+        try
+        {
+            var items = await e.DataView.GetStorageItemsAsync();
+            var item = items.FirstOrDefault(x => Path.GetExtension(x.Path).Equals(".sln", StringComparison.OrdinalIgnoreCase));
+            if (item == null) return;
+
+            await this.OpenAsync(item.Path);
+        }
+        finally
+        {
+            deferral.Complete();
+        }
+    }
 }
