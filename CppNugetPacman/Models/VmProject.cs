@@ -45,4 +45,24 @@ public partial class VmProject : VmNode
         this.IsUnique = package.IsUnique;
         this.Details = package.Details;
     }
+
+    public async Task ApplyAsync(VmPackage package, string location, string version)
+    {  
+        var packageData = this.Data.Packages.FirstOrDefault(x => x.Id == package.Title);
+        if(packageData == null) return;
+
+
+        //apply path
+
+        if (location != packageData.Path)
+        {
+            await this.Data.UpdateLocalFolderPathAsync(package.Data.Id, location);
+        }
+
+        if (version !=packageData.Version)
+        {
+            await this.Data.UpdatePackageVersionAsync(package.Data.Id, version);
+        }
+       
+    }
 }

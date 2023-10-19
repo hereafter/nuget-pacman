@@ -55,6 +55,13 @@ public partial class VmPackage: VmNode
     }
 
     
+    public async Task ApplyAsync(string location, string version)
+    {
+        foreach(var project in this.Projects)
+        {
+            await project.ApplyAsync(this, location, version);
+        }
+    }
 
 }
 

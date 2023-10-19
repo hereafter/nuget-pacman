@@ -36,8 +36,26 @@ public sealed partial class MainPage : Page
     }
 
 
-    private void OnButtonUpdateClick(object sender, RoutedEventArgs e)
+    private async void OnButtonUpdateClick(object sender, RoutedEventArgs e)
     {
+        var item=_treeView.SelectedItem;
+        if (item == null) return;
 
+        if (this.Solution == null) return;
+
+
+        var location = TextBoxFolderPath.Text.Trim();
+        var version = TextBoxVersion.Text.Trim();
+
+        if(item is VmPackage package)
+        {
+            await package.ApplyAsync(location, version);
+        }
+
+        if (item is VmProject project)
+        {
+            var p=this.Solution.Packages.First(p => p.Projects.Contains(project));
+            await project.ApplyAsync(p, location, version);
+        }
     }
 }

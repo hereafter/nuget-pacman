@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace CppNugetPacman.Models.Data;
@@ -20,18 +21,17 @@ public class MProject : MItem
         if (configFilePath == null) return false;
 
         var packages = new List<MNugetPackage>();
-        var lines = await File.ReadAllLinesAsync(configFilePath);
-
-
+        
         var rx = new Regex("(\\S*?)=\"(.*?)\"");
 
-        foreach (var line in lines)
+        await this.ParseLinesAsync(configFilePath, (line) =>
         {
+
             var content = line.Trim();
-            if (!content.StartsWith("<package id")) continue;
+            if (!content.StartsWith("<package id")) return;
 
             var matches = rx.Matches(content);
-            if (matches.Count < 3) continue;
+            if (matches.Count < 3) return;
 
             var id = matches[0].Groups[2].Value.ToString();
             var version = matches[1].Groups[2].Value.ToString();
@@ -43,13 +43,10 @@ public class MProject : MItem
             package.Version = version;
             packages.Add(package);
             Debug.WriteLine($"-> {id}: {version}");
-        }
+        });
+
         Packages = packages;
-
-        lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
-
-
-
+        var lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
 
         foreach (var p in Packages)
         {
@@ -94,13 +91,152 @@ public class MProject : MItem
         return true;
     }
 
-    public async Task<bool> UpdateLocalFolderPathAsync(string folderPath = "$(SolutionDir)packages\\")
+    public async Task<bool> UpdateLocalFolderPathAsync(string pid, string folderPath = "$(SolutionDir)packages\\")
     {
+        var filePath = this.FilePath;
+        if (filePath==null || !filePath.EndsWith(".vcxproj")) return false;
+
+        FilePath = filePath;
+        FolderPath = Path.GetDirectoryName(filePath);
+        if (FolderPath == null) return false;
+
+        //package.config
+        var options = new EnumerationOptions { RecurseSubdirectories = true };
+        var configFilePath = Directory.EnumerateFiles(FolderPath, "packages.config", options).FirstOrDefault();
+        if (configFilePath == null) return false;
+
+        var packages = new List<MNugetPackage>();
+        var lines = await File.ReadAllLinesAsync(configFilePath);
+
+
+        var rx = new Regex("(\\S*?)=\"(.*?)\"");
+
+        foreach (var line in lines)
+        {
+            var content = line.Trim();
+            if (!content.StartsWith("<package id")) continue;
+
+            var matches = rx.Matches(content);
+            if (matches.Count < 3) continue;
+
+            var id = matches[0].Groups[2].Value.ToString();
+            var version = matches[1].Groups[2].Value.ToString();
+
+            var package = new MNugetPackage
+            {
+                Id = id
+            };
+            package.Version = version;
+            packages.Add(package);
+            Debug.WriteLine($"-> {id}: {version}");
+        }
+        Packages = packages;
+
+        lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
+
+
         return true;
     }
 
     public async Task<bool> UpdatePackageVersionAsync(string pid, string newVersion)
     {
-        return false;
+        var filePath = this.FilePath;
+        if (filePath == null || !filePath.EndsWith(".vcxproj")) return false;
+
+        FilePath = filePath;
+        FolderPath = Path.GetDirectoryName(filePath);
+        if (FolderPath == null) return false;
+
+        var versions = this.Packages.FirstOrDefault(x => x.Id == pid)?.Versions;
+        if (versions == null) return false;
+
+        //package.config
+        var options = new EnumerationOptions { RecurseSubdirectories = true };
+        var configFilePath = Directory.EnumerateFiles(FolderPath, "packages.config", options).FirstOrDefault();
+        if (configFilePath == null) return false;
+       
+        var rx = new Regex("(\\S*?)=\"(.*?)\"");
+        await this.TransformLinesAsync(configFilePath, (line) =>
+        {
+            var content = line.Trim();
+            if (!content.StartsWith("<package id"))
+            {
+                return content;
+            }
+
+            var matches = rx.Matches(content);
+            if (matches.Count < 3)
+            {
+                return content;
+            }
+
+            var id = matches[0].Groups[2].Value.ToString();
+            var version = matches[1].Groups[2].Value.ToString();
+
+            if (id != pid)
+            {
+                return content;
+            }
+
+            return content.Replace(version, newVersion);
+        });
+
+        var rx1 = new Regex($"'([^'\\\"]*?{pid}[^'\\\"]*?)'");
+        var rx2 = new Regex($"\"([^'\\\"]*?{pid}[^'\\\"]*?)\"");
+
+        await this.TransformLinesAsync(filePath, (line) =>
+        {
+            var matches = rx1.Matches(line);
+            if (matches.Count == 0)
+            {
+                matches = rx2.Matches(line);
+            }
+
+            if (matches.Count == 0) return line;
+
+            var content = line;
+            foreach(var v in versions)
+            {
+                content = line.Replace(v, newVersion);
+            }
+            return content;
+        });
+
+
+        return true;
+    }
+
+
+    public async Task ParseLinesAsync(string filePath, Action<string> parse)
+    {
+        var lines = await File.ReadAllLinesAsync(filePath);
+        foreach (var line in lines)
+        {
+            try
+            {
+                parse(line);
+            }
+            catch
+            {
+            }
+        }
+    }
+
+    public async Task TransformLinesAsync(string filePath, Func<string, string> transform)
+    {
+        var lines = await File.ReadAllLinesAsync(filePath);
+        var targetLines = new List<string>();
+        foreach (var line in lines)
+        {
+            try
+            {
+                targetLines.Add(transform(line));
+            }
+            catch
+            {
+                targetLines.Add(line);
+            }
+        }
+        await File.WriteAllLinesAsync(filePath, targetLines);
     }
 }
